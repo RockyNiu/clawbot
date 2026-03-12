@@ -93,7 +93,7 @@ fi
 # Check mount points (ensure no sensitive directories are mounted)
 echo ""
 echo "Current container mount points:"
-docker inspect $(docker ps -qf "name=openclaw-gateway") --format '{{range .Mounts}}{{.Source}} -> {{.Destination}} ({{.Mode}}){{println}}{{end}}' 2>/dev/null || echo "Unable to retrieve mount information"
+docker inspect "$(docker ps -qf "name=openclaw-gateway")" --format '{{range .Mounts}}{{.Source}} -> {{.Destination}} ({{.Mode}}){{println}}{{end}}' 2>/dev/null || echo "Unable to retrieve mount information"
 
 echo ""
 echo "========================================="
