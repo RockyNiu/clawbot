@@ -66,11 +66,11 @@ check-bind:
 
 # 运行 CLI 命令（示例：just cli health）
 cli *ARGS:
-    docker compose run --rm openclaw-cli {{ARGS}}
+    docker compose run --rm openclaw-cli {{ ARGS }}
 
 # 在运行中的容器执行命令
 exec *ARGS:
-    docker compose exec openclaw-gateway {{ARGS}}
+    docker compose exec openclaw-gateway {{ ARGS }}
 
 # 进入容器 shell
 shell:
@@ -106,11 +106,11 @@ config-get:
 
 # 查看特定配置（示例：just config-get-key gateway.bind）
 config-get-key KEY:
-    @just cli config get {{KEY}}
+    @just cli config get {{ KEY }}
 
 # 设置配置（示例：just config-set gateway.bind lan）
 config-set KEY VALUE:
-    @just cli config set {{KEY}} {{VALUE}}
+    @just cli config set {{ KEY }} {{ VALUE }}
     @echo "✅ 配置已更新，请重启 Gateway：just restart"
 
 # 显示 Gateway Token
@@ -132,7 +132,7 @@ devices:
 
 # 批准设备配对（示例：just approve <requestId>）
 approve REQUEST_ID:
-    @just cli devices approve {{REQUEST_ID}}
+    @just cli devices approve {{ REQUEST_ID }}
     @echo "✅ 设备已批准"
 
 # 启用自动批准（仅开发环境）
@@ -149,15 +149,15 @@ channels:
 
 # 添加 Telegram Channel（示例：just add-telegram BOT_TOKEN）
 add-telegram TOKEN:
-    @just cli channels add --channel telegram --token {{TOKEN}}
+    @just cli channels add --channel telegram --token {{ TOKEN }}
 
 # 添加 Discord Channel（示例：just add-discord BOT_TOKEN）
 add-discord TOKEN:
-    @just cli channels add --channel discord --token {{TOKEN}}
+    @just cli channels add --channel discord --token {{ TOKEN }}
 
 # 登录 WhatsApp（交互式）
 login-whatsapp:
-    docker compose exec openclaw-cli openclaw channels login
+    docker compose run --rm -it openclaw-cli channels login --channel whatsapp
 
 # ========== 安全配置 ==========
 
@@ -245,6 +245,39 @@ diagnose:
     @echo ""
 
 # ========== 快捷功能 ==========
+# 发送 TTS 语音消息
+# 示例：just voice +15555550123 telegram "Test message for Lei Niu."
+
+# 可选：在 .env 中设置 ELEVENLABS_VOICE_ID（默认使用 Rachel 音色）
+voice TARGET CHANNEL TEXT:
+    #!/usr/bin/env bash
+    set -eo pipefail
+    source .env
+    VOICE_ID="${ELEVENLABS_VOICE_ID:-21m00Tcm4TlvDq8ikWAM}"
+    # macOS mktemp requires X's at the end; generate base then add .mp3 suffix
+    _TMPBASE="$(mktemp /tmp/voice_XXXXX)"
+    AUDIO_FILE="${_TMPBASE}.mp3"
+    mv "$_TMPBASE" "$AUDIO_FILE"
+    echo "🎙️  Generating TTS audio..."
+    HTTP_STATUS=$(curl -s -o "$AUDIO_FILE" -w "%{http_code}" \
+        -X POST "https://api.elevenlabs.io/v1/text-to-speech/${VOICE_ID}" \
+        -H "xi-api-key: ${ELEVENLABS_API_KEY}" \
+        -H "Content-Type: application/json" \
+        -d "{\"text\":\"{{ TEXT }}\",\"model_id\":\"eleven_multilingual_v2\"}")
+    if [[ "$HTTP_STATUS" != "200" ]]; then
+        echo "❌ ElevenLabs API error (HTTP $HTTP_STATUS)"
+        rm -f "$AUDIO_FILE"
+        exit 1
+    fi
+    echo "📤 Sending voice message to {{ TARGET }} via {{ CHANNEL }}..."
+    docker compose run --rm \
+        -v "${AUDIO_FILE}:/tmp/voice.mp3:ro" \
+        openclaw-cli message send \
+        --channel "{{ CHANNEL }}" \
+        --target "{{ TARGET }}" \
+        --media /tmp/voice.mp3
+    rm -f "$AUDIO_FILE"
+    echo "✅ 语音消息已发送"
 
 # 打开 Web UI
 open:
