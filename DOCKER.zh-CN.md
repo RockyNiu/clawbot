@@ -61,6 +61,7 @@ just setup-secure
 ```
 
 **安全措施**:
+
 - ✅ **仅 localhost 访问** (`loopback` 绑定)
 - ✅ **强制 Token 认证** (自动生成 64 字符随机 Token)
 - ✅ **Docker 沙箱隔离**
@@ -86,10 +87,10 @@ just health
 
 ### 安全模式对比
 
-| 模式 | 网络绑定 | 访问范围 | 适用场景 | 安全级别 |
-|------|----------|----------|----------|----------|
-| **安全模式** | `loopback` | 仅本机 | 生产环境 | ⭐⭐⭐⭐⭐ |
-| **标准模式** | `lan` | 本地网络 | 开发测试 | ⭐⭐⭐ |
+| 模式         | 网络绑定   | 访问范围 | 适用场景 | 安全级别   |
+| ------------ | ---------- | -------- | -------- | ---------- |
+| **安全模式** | `loopback` | 仅本机   | 生产环境 | ⭐⭐⭐⭐⭐ |
+| **标准模式** | `lan`      | 本地网络 | 开发测试 | ⭐⭐⭐     |
 
 ### 切换安全模式
 
@@ -100,6 +101,7 @@ just security-lock
 ```
 
 **效果**:
+
 - 仅允许 `localhost` 访问
 - 设置目录权限为 `700`
 - 自动重启 Gateway
@@ -113,6 +115,7 @@ just security-unlock
 ```
 
 **效果**:
+
 - 允许 LAN 访问
 - 可从局域网其他设备访问
 
@@ -125,6 +128,7 @@ just security-status
 ```
 
 **输出示例**:
+
 ```
 === 安全配置状态 ===
 
@@ -200,6 +204,7 @@ ssh -L 18789:localhost:18789 user@gateway-host
 #### 方案 3: Reverse Proxy（高级）
 
 使用 Nginx/Caddy + TLS，配置：
+
 - HTTPS 加密
 - 客户端证书认证
 - IP 白名单
@@ -302,6 +307,7 @@ just urls        # 显示所有访问地址
 **原因**: 容器内只有 `openclaw` 命令，没有 `claw`
 
 **解决方案**:
+
 ```bash
 # 使用 Just 任务管理
 just cli health       # 运行 CLI 命令
@@ -313,10 +319,12 @@ just --list           # 查看所有可用命令
 **错误信息**: `fuser not found; required for --force when lsof is unavailable`
 
 **原因**:
+
 - Docker 容器使用精简镜像，缺少 `fuser` 工具
 - Gateway 已经通过 docker-compose 运行
 
 **解决方案**:
+
 ```bash
 just restart          # 重启 Gateway
 just logs             # 查看日志
@@ -329,6 +337,7 @@ just logs             # 查看日志
 **原因**: CLI 和 Gateway 的 Token 不一致
 
 **解决方案**:
+
 ```bash
 # 方法 1: 一键修复（推荐）
 just fix-token
@@ -345,6 +354,7 @@ just sync-token       # 同步 Token
 **原因**: Gateway 绑定到容器内的 `127.0.0.1`，无法从宿主机访问
 
 **解决方案**:
+
 ```bash
 # 方法 1: 一键修复（推荐）
 just fix-bind
@@ -359,6 +369,7 @@ just health
 ```
 
 **验证绑定地址**:
+
 ```bash
 # ✅ 正确（可以从宿主机访问）
 listening on ws://0.0.0.0:18789
@@ -372,6 +383,7 @@ listening on ws://127.0.0.1:18789
 **原因**: 首次从浏览器访问需要设备配对
 
 **解决方案**:
+
 ```bash
 # 1. 查看待批准的设备
 just devices
@@ -387,6 +399,7 @@ just devices
 ```
 
 **自动批准**（仅开发环境）:
+
 ```bash
 just auto-approve
 ```
@@ -396,6 +409,7 @@ just auto-approve
 ## 📋 Just 命令完整列表
 
 ### 服务管理
+
 - `just up` - 启动所有服务
 - `just down` - 停止所有服务
 - `just restart` - 重启 Gateway
@@ -403,28 +417,33 @@ just auto-approve
 - `just reup` - 完全重启（停止 -> 启动）
 
 ### 构建
+
 - `just build` - 构建 Docker 镜像
 - `just rebuild` - 重新构建并启动
 - `just build-browser` - 构建（包含浏览器支持，+300MB）
 - `just build-sandbox` - 构建（包含 Docker CLI，用于沙箱）
 
 ### 日志与监控
+
 - `just logs` - 查看实时日志
 - `just logs-tail` - 查看最近 50 行日志
 - `just stats` - 查看资源使用统计
 - `just check-bind` - 查看 Gateway 绑定地址
 
 ### CLI 命令
+
 - `just cli <args>` - 运行任意 CLI 命令
 - `just exec <args>` - 在运行的容器中执行命令
 - `just shell` - 进入容器 shell
 
 ### 健康检查
+
 - `just health` - HTTP 健康检查（JSON 格式）
 - `just health-cli` - CLI 健康检查
 - `just verify` - 验证所有服务状态
 
 ### 配置管理
+
 - `just config-get` - 查看所有配置
 - `just config-get-key <key>` - 查看特定配置
 - `just config-set <key> <value>` - 设置配置
@@ -432,39 +451,46 @@ just auto-approve
 - `just sync-token` - 同步 Token
 
 ### 设备管理
+
 - `just devices` - 查看设备列表
 - `just approve <id>` - 批准设备配对
 - `just auto-approve` - 启用自动批准（仅开发环境）
 
 ### 安全配置
+
 - `just setup-secure` - 安全强化设置（推荐生产环境）
 - `just security-lock` - 锁定为安全模式（仅 localhost）
 - `just security-unlock` - 解锁为开发模式（允许 LAN）
 - `just security-status` - 查看安全配置状态
 
 ### Channel 管理
+
 - `just channels` - 查看 Channel 状态
 - `just add-telegram <token>` - 添加 Telegram Channel
 - `just add-discord <token>` - 添加 Discord Channel
 - `just login-whatsapp` - 登录 WhatsApp（交互式）
 
 ### 故障排查
+
 - `just fix-bind` - 修复 localhost 无法访问问题
 - `just fix-token` - 修复 Token 不匹配问题
 - `just diagnose` - 查看完整诊断信息
 
 ### 快捷功能
+
 - `just open` - 打开 Web UI (http://localhost:18789)
 - `just open-canvas` - 打开 Canvas
 - `just urls` - 显示所有访问地址
 
 ### 维护
+
 - `just clean` - 清理未使用的 Docker 资源
 - `just clean-all` - 完全清理（包括 volumes）
 - `just backup` - 备份配置到 `~/.openclaw.backup.YYYYMMDD_HHMMSS`
 - `just cat-config` - 查看配置文件（JSON 格式）
 
 ### 开发
+
 - `just dev` - 开发模式（启动 + 实时日志）
 - `just setup` - 完整设置（首次使用）
 - `just test` - 快速测试（构建 -> 验证）
@@ -476,6 +502,7 @@ just auto-approve
 ### Gateway Token
 
 查看 Token:
+
 ```bash
 just token
 ```
@@ -489,16 +516,18 @@ just urls  # 显示所有地址
 - **Web UI**: http://localhost:18789
 - **Health**: http://localhost:18789/healthz
 - **Ready**: http://localhost:18789/readyz
-- **Canvas**: http://localhost:18789/__openclaw__/canvas/
+- **Canvas**: http://localhost:18789/**openclaw**/canvas/
 
 ### 配置文件位置
 
 **在宿主机**:
+
 - 配置文件: `~/.openclaw/openclaw.json`
 - 工作区: `~/.openclaw/workspace/`
 - 环境变量: `./.env`
 
 **在容器内**:
+
 - 配置文件: `/home/node/.openclaw/openclaw.json`
 - 工作区: `/home/node/.openclaw/workspace/`
 - 二进制: `/usr/local/bin/openclaw`
@@ -511,6 +540,7 @@ just config-get
 ```
 
 默认配置:
+
 - **Gateway Bind**: `lan` (监听所有网络接口)
 - **Gateway Port**: `18789`
 - **Bridge Port**: `18790`
@@ -524,11 +554,13 @@ just config-get
 ### Connection refused（无法访问 localhost:18789）
 
 **快速修复**:
+
 ```bash
 just fix-bind
 ```
 
 **手动修复**:
+
 ```bash
 # 1. 检查绑定地址
 just check-bind
@@ -549,11 +581,13 @@ just health
 ### Token 不匹配
 
 **快速修复**:
+
 ```bash
 just fix-token
 ```
 
 **手动修复**:
+
 ```bash
 # 1. 查看 Token
 just token
@@ -602,6 +636,7 @@ just diagnose
 ```
 
 这会显示:
+
 - Docker 容器状态
 - Gateway 绑定地址
 - Gateway Token
@@ -732,11 +767,13 @@ docker build --build-arg OPENCLAW_INSTALL_DOCKER_CLI=1 -t openclaw:local .
 #### 安装额外的系统包
 
 修改 `.env` 文件：
+
 ```bash
 OPENCLAW_DOCKER_APT_PACKAGES="python3 wget curl vim"
 ```
 
 然后重新构建：
+
 ```bash
 just rebuild
 ```
@@ -744,6 +781,7 @@ just rebuild
 #### 使用 Slim 变体（更小的镜像）
 
 手动构建：
+
 ```bash
 docker build --build-arg OPENCLAW_VARIANT=slim -t openclaw:local .
 ```
@@ -759,6 +797,7 @@ just config-get-key agents.defaults.sandbox.scope
 ```
 
 沙箱模式需要：
+
 1. Docker CLI 在镜像中（已安装）
 2. Docker socket 挂载到容器（已配置）
 3. 正确的组权限（已设置）
@@ -783,6 +822,7 @@ OPENCLAW_SANDBOX=1
 ```
 
 修改后重启服务：
+
 ```bash
 just restart
 ```
@@ -943,6 +983,7 @@ just config-get
 ### 4. 开始使用
 
 访问 Web UI:
+
 ```bash
 just open
 ```
@@ -995,6 +1036,7 @@ just verify    # 验证所有服务
 ```
 
 手动验证项目：
+
 - [ ] Just 已安装 (`just --version`)
 - [ ] Docker 正在运行 (`docker ps`)
 - [ ] Gateway 已启动 (`just ps`)
@@ -1023,5 +1065,6 @@ just verify    # 验证所有服务
 ---
 
 📖 **相关文档**:
+
 - [DOCKER.md](./DOCKER.md) - English version
 - [DOCKER-SECURITY.zh-CN.md](./DOCKER-SECURITY.zh-CN.md) - 安全配置快速参考

@@ -61,6 +61,7 @@ just setup-secure
 ```
 
 **Security measures**:
+
 - ✅ **Localhost-only access** (`loopback` binding)
 - ✅ **Mandatory token authentication** (auto-generated 64-char random token)
 - ✅ **Docker sandbox isolation**
@@ -86,10 +87,10 @@ just health
 
 ### Security Mode Comparison
 
-| Mode | Network Binding | Access Range | Use Case | Security Level |
-|------|----------------|--------------|----------|----------------|
-| **Secure Mode** | `loopback` | Local only | Production | ⭐⭐⭐⭐⭐ |
-| **Standard Mode** | `lan` | Local network | Dev/Test | ⭐⭐⭐ |
+| Mode              | Network Binding | Access Range  | Use Case   | Security Level |
+| ----------------- | --------------- | ------------- | ---------- | -------------- |
+| **Secure Mode**   | `loopback`      | Local only    | Production | ⭐⭐⭐⭐⭐     |
+| **Standard Mode** | `lan`           | Local network | Dev/Test   | ⭐⭐⭐         |
 
 ### Switch Security Modes
 
@@ -100,6 +101,7 @@ just security-lock
 ```
 
 **Effects**:
+
 - Allows `localhost` access only
 - Sets directory permissions to `700`
 - Auto-restarts Gateway
@@ -113,6 +115,7 @@ just security-unlock
 ```
 
 **Effects**:
+
 - Allows LAN access
 - Accessible from other devices on local network
 
@@ -125,6 +128,7 @@ just security-status
 ```
 
 **Example output**:
+
 ```
 === Security Configuration Status ===
 
@@ -200,6 +204,7 @@ ssh -L 18789:localhost:18789 user@gateway-host
 #### Option 3: Reverse Proxy (Advanced)
 
 Use Nginx/Caddy + TLS with:
+
 - HTTPS encryption
 - Client certificate authentication
 - IP whitelist
@@ -302,6 +307,7 @@ just urls        # Show all access URLs
 **Cause**: Container only has `openclaw` command, not `claw`
 
 **Solution**:
+
 ```bash
 # Use Just task manager
 just cli health       # Run CLI command
@@ -313,10 +319,12 @@ just --list           # View all commands
 **Error**: `fuser not found; required for --force when lsof is unavailable`
 
 **Cause**:
+
 - Docker container uses minimal image, missing `fuser` tool
 - Gateway already running via docker-compose
 
 **Solution**:
+
 ```bash
 just restart          # Restart Gateway
 just logs             # View logs
@@ -329,6 +337,7 @@ just logs             # View logs
 **Cause**: CLI and Gateway tokens don't match
 
 **Solution**:
+
 ```bash
 # Method 1: One-click fix (recommended)
 just fix-token
@@ -345,6 +354,7 @@ just sync-token       # Sync Token
 **Cause**: Gateway bound to container's `127.0.0.1`, unreachable from host
 
 **Solution**:
+
 ```bash
 # Method 1: One-click fix (recommended)
 just fix-bind
@@ -359,6 +369,7 @@ just health
 ```
 
 **Verify binding address**:
+
 ```bash
 # ✅ Correct (accessible from host)
 listening on ws://0.0.0.0:18789
@@ -372,6 +383,7 @@ listening on ws://127.0.0.1:18789
 **Cause**: First browser access requires device pairing
 
 **Solution**:
+
 ```bash
 # 1. View pending devices
 just devices
@@ -387,6 +399,7 @@ just devices
 ```
 
 **Auto-approve** (development only):
+
 ```bash
 just auto-approve
 ```
@@ -396,6 +409,7 @@ just auto-approve
 ## 📋 Complete Just Commands
 
 ### Service Management
+
 - `just up` - Start all services
 - `just down` - Stop all services
 - `just restart` - Restart Gateway
@@ -403,28 +417,33 @@ just auto-approve
 - `just reup` - Full restart (stop -> start)
 
 ### Build
+
 - `just build` - Build Docker image
 - `just rebuild` - Rebuild and start
 - `just build-browser` - Build (with browser support, +300MB)
 - `just build-sandbox` - Build (with Docker CLI for sandbox)
 
 ### Logging & Monitoring
+
 - `just logs` - View realtime logs
 - `just logs-tail` - View last 50 lines
 - `just stats` - View resource usage
 - `just check-bind` - Check Gateway binding address
 
 ### CLI Commands
+
 - `just cli <args>` - Run any CLI command
 - `just exec <args>` - Execute in running container
 - `just shell` - Enter container shell
 
 ### Health Checks
+
 - `just health` - HTTP health check (JSON)
 - `just health-cli` - CLI health check
 - `just verify` - Verify all services
 
 ### Configuration
+
 - `just config-get` - View all config
 - `just config-get-key <key>` - View specific config
 - `just config-set <key> <value>` - Set config
@@ -432,39 +451,46 @@ just auto-approve
 - `just sync-token` - Sync Token
 
 ### Device Management
+
 - `just devices` - View device list
 - `just approve <id>` - Approve device pairing
 - `just auto-approve` - Enable auto-approve (dev only)
 
 ### Security Configuration
+
 - `just setup-secure` - Hardened security setup (recommended for production)
 - `just security-lock` - Lock to secure mode (localhost only)
 - `just security-unlock` - Unlock to dev mode (allow LAN)
 - `just security-status` - View security configuration status
 
 ### Channel Management
+
 - `just channels` - View Channel status
 - `just add-telegram <token>` - Add Telegram Channel
 - `just add-discord <token>` - Add Discord Channel
 - `just login-whatsapp` - Login WhatsApp (interactive)
 
 ### Troubleshooting
+
 - `just fix-bind` - Fix localhost unreachable issue
 - `just fix-token` - Fix token mismatch
 - `just diagnose` - View complete diagnostics
 
 ### Quick Functions
+
 - `just open` - Open Web UI (http://localhost:18789)
 - `just open-canvas` - Open Canvas
 - `just urls` - Show all access URLs
 
 ### Maintenance
+
 - `just clean` - Clean unused Docker resources
 - `just clean-all` - Full cleanup (including volumes)
 - `just backup` - Backup config to `~/.openclaw.backup.YYYYMMDD_HHMMSS`
 - `just cat-config` - View config file (JSON format)
 
 ### Development
+
 - `just dev` - Development mode (start + realtime logs)
 - `just setup` - Complete setup (first use)
 - `just test` - Quick test (build -> verify)
@@ -476,6 +502,7 @@ just auto-approve
 ### Gateway Token
 
 View Token:
+
 ```bash
 just token
 ```
@@ -489,16 +516,18 @@ just urls  # Show all URLs
 - **Web UI**: http://localhost:18789
 - **Health**: http://localhost:18789/healthz
 - **Ready**: http://localhost:18789/readyz
-- **Canvas**: http://localhost:18789/__openclaw__/canvas/
+- **Canvas**: http://localhost:18789/**openclaw**/canvas/
 
 ### Configuration File Locations
 
 **On host**:
+
 - Config: `~/.openclaw/openclaw.json`
 - Workspace: `~/.openclaw/workspace/`
 - Environment: `./.env`
 
 **In container**:
+
 - Config: `/home/node/.openclaw/openclaw.json`
 - Workspace: `/home/node/.openclaw/workspace/`
 - Binary: `/usr/local/bin/openclaw`
@@ -511,6 +540,7 @@ just config-get
 ```
 
 Default configuration:
+
 - **Gateway Bind**: `lan` (listens on all network interfaces)
 - **Gateway Port**: `18789`
 - **Bridge Port**: `18790`
@@ -524,11 +554,13 @@ Default configuration:
 ### Connection refused (localhost:18789 unreachable)
 
 **Quick fix**:
+
 ```bash
 just fix-bind
 ```
 
 **Manual fix**:
+
 ```bash
 # 1. Check binding address
 just check-bind
@@ -549,11 +581,13 @@ just health
 ### Token mismatch
 
 **Quick fix**:
+
 ```bash
 just fix-token
 ```
 
 **Manual fix**:
+
 ```bash
 # 1. View Token
 just token
@@ -602,6 +636,7 @@ just diagnose
 ```
 
 This shows:
+
 - Docker container status
 - Gateway binding address
 - Gateway Token
@@ -732,11 +767,13 @@ docker build --build-arg OPENCLAW_INSTALL_DOCKER_CLI=1 -t openclaw:local .
 #### Install Additional System Packages
 
 Edit `.env` file:
+
 ```bash
 OPENCLAW_DOCKER_APT_PACKAGES="python3 wget curl vim"
 ```
 
 Then rebuild:
+
 ```bash
 just rebuild
 ```
@@ -744,6 +781,7 @@ just rebuild
 #### Use Slim Variant (Smaller Image)
 
 Manual build:
+
 ```bash
 docker build --build-arg OPENCLAW_VARIANT=slim -t openclaw:local .
 ```
@@ -759,6 +797,7 @@ just config-get-key agents.defaults.sandbox.scope
 ```
 
 Sandbox mode requires:
+
 1. Docker CLI in image (installed)
 2. Docker socket mounted to container (configured)
 3. Correct group permissions (set)
@@ -783,6 +822,7 @@ OPENCLAW_SANDBOX=1
 ```
 
 After editing, restart:
+
 ```bash
 just restart
 ```
@@ -943,6 +983,7 @@ just config-get
 ### 4. Start Using
 
 Access Web UI:
+
 ```bash
 just open
 ```
@@ -995,6 +1036,7 @@ just verify    # Verify all services
 ```
 
 Manual verification:
+
 - [ ] Just installed (`just --version`)
 - [ ] Docker running (`docker ps`)
 - [ ] Gateway started (`just ps`)
@@ -1025,5 +1067,6 @@ Manual verification:
 ---
 
 📖 **Related documentation**:
+
 - [DOCKER.zh-CN.md](./DOCKER.zh-CN.md) - Chinese version
 - [DOCKER-SECURITY.md](./DOCKER-SECURITY.md) - Security quick reference

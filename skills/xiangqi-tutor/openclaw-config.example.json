@@ -1,0 +1,90 @@
+{
+  "_comment": "Example OpenClaw configuration for Xiangqi Tutor skill",
+  "_instructions": "Copy relevant sections to your ~/.openclaw/openclaw.json",
+
+  "agents": {
+    "defaults": {
+      "sandbox": {
+        "mode": "off",
+        "_note": "Set to 'off' if not using Docker, or 'non-main' if Docker is available"
+      }
+    }
+  },
+
+  "messages": {
+    "tts": {
+      "auto": "always",
+      "provider": "edge",
+      "edge": {
+        "voice": "en-US-EricNeural",
+        "_alternatives": [
+          "en-US-AndrewNeural (young, friendly)",
+          "en-US-GuyNeural (mature, professional)",
+          "en-US-BrandonNeural (casual, energetic)",
+          "en-US-ChristopherNeural (warm, patient)"
+        ]
+      },
+      "_note": "Voice replies are sent via WhatsApp. EricNeural is recommended for high school students."
+    }
+  },
+
+  "channels": {
+    "whatsapp": {
+      "enabled": true,
+      "dmPolicy": "pairing",
+      "_dmPolicyOptions": {
+        "pairing": "Requires device approval before responding",
+        "open": "Responds to all direct messages",
+        "allowlist": "Only responds to numbers in allowFrom"
+      },
+      "allowFrom": ["PHONE_NUMBER_WITHOUT_PLUS"],
+      "_allowFromExample": "15551234567",
+      "groupPolicy": "allowlist",
+      "_groupPolicyOptions": {
+        "allowlist": "Only responds in groups listed in groupAllowFrom",
+        "open": "Responds in all groups"
+      },
+      "debounceMs": 0,
+      "mediaMaxMb": 50,
+      "_setup": [
+        "1. Scan QR code in OpenClaw Mac app Settings -> Channels -> WhatsApp",
+        "2. Add your phone number (without +) to allowFrom array",
+        "3. Students can scan the QR code in index.html to start chatting"
+      ]
+    }
+  },
+
+  "gateway": {
+    "mode": "local",
+    "_modeOptions": {
+      "local": "Run gateway on this machine (recommended)",
+      "remote": "Connect to a remote gateway"
+    },
+    "bind": "lan",
+    "_bindOptions": {
+      "loopback": "Only accessible from this machine (127.0.0.1)",
+      "lan": "Accessible from local network (0.0.0.0)"
+    }
+  },
+
+  "_deployment_notes": {
+    "skill_location": "~/.openclaw/workspace/skills/xiangqi-tutor/",
+    "whatsapp_number": "Your WhatsApp Business number or personal number",
+    "qr_code_page": "Deploy index.html to share with students",
+    "voice_replies": "Automatically sent as audio messages via WhatsApp",
+    "privacy": {
+      "note": "This is a local AI tutor. No student data is sent to external servers.",
+      "data_storage": "Conversation history stored locally in ~/.openclaw/",
+      "sandbox_mode": "Set to 'off' for teaching scenarios, 'always' for production"
+    }
+  },
+
+  "_quick_setup": [
+    "1. Copy this repo's skills/xiangqi-tutor/ to ~/.openclaw/workspace/skills/",
+    "2. Configure WhatsApp in OpenClaw Mac app (scan QR code)",
+    "3. Add student phone numbers to channels.whatsapp.allowFrom",
+    "4. Set messages.tts.edge.voice to preferred voice",
+    "5. Deploy index.html for students to scan and start learning",
+    "6. Test by sending 'Teach me Chinese chess' via WhatsApp"
+  ]
+}

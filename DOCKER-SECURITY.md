@@ -4,15 +4,15 @@
 
 ### `just setup` vs `just setup-secure`
 
-| Item | `just setup`<br>(Standard Mode) | `just setup-secure`<br>(Hardened Security) |
-|------|--------------------------------|-------------------------------------------|
-| **Network Binding** | `lan` (0.0.0.0) | `loopback` (127.0.0.1) |
-| **Access Range** | All LAN devices | Local machine only |
-| **Directory Permissions** | Default (may be 755) | Enforced 700 |
-| **Token Generation** | Use existing or manual | Auto-generate 64-char random token |
-| **Security Verification** | None | Auto-verify after startup |
-| **Use Case** | Development/Testing | Production |
-| **Security Level** | ⭐⭐⭐ | ⭐⭐⭐⭐⭐ |
+| Item                      | `just setup`<br>(Standard Mode) | `just setup-secure`<br>(Hardened Security) |
+| ------------------------- | ------------------------------- | ------------------------------------------ |
+| **Network Binding**       | `lan` (0.0.0.0)                 | `loopback` (127.0.0.1)                     |
+| **Access Range**          | All LAN devices                 | Local machine only                         |
+| **Directory Permissions** | Default (may be 755)            | Enforced 700                               |
+| **Token Generation**      | Use existing or manual          | Auto-generate 64-char random token         |
+| **Security Verification** | None                            | Auto-verify after startup                  |
+| **Use Case**              | Development/Testing             | Production                                 |
+| **Security Level**        | ⭐⭐⭐                          | ⭐⭐⭐⭐⭐                                 |
 
 ## Quick Decision
 
@@ -37,5 +37,6 @@ For complete security configuration, see [DOCKER.md - Security Configuration](./
 ---
 
 📖 **Related documentation**:
+
 - [DOCKER-SECURITY.zh-CN.md](./DOCKER-SECURITY.zh-CN.md) - Chinese version
 - [DOCKER.md](./DOCKER.md) - Complete Docker guide
